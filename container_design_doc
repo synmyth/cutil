@@ -11,6 +11,8 @@ vector_empty - return the vector is empty
 vector_capacity - return the capacity
 vector_insert - insert to vector at i
 vector_clear - remove all elements in vector
+vector_delete - delete element at position i
+vector_replace - replace element at position i
 
 2. flist degisn
 functions:
