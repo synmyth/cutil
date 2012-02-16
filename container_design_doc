@@ -1,0 +1,66 @@
+1. vector design
+functions:
+vector_init - initialize the vector
+vector_destroy - destroy vector
+vector_at - return the pointer to i'th element
+vector_front - return the pointer to first element
+vector_back - return the pointer to last element
+vector_append - add element to end
+vector_size - return the size of vector
+vector_empty - return the vector is empty
+vector_capacity - return the capacity
+vector_insert - insert to vector at i
+vector_clear - remove all elements in vector
+
+2. flist degisn
+functions:
+flist_init - initialize the flist
+flist_destroy - destroy flist
+flist_front - access the first element
+flist_empty - checks whether the container is empty
+flist_push_front - inserts element to the beginning
+flist_pop_front - removes the first element
+flist_reverse - reverses the order of the elements
+
+3. stack design
+functions:
+stack_init - initialize the stack
+stack_destroy - destroy the stack
+stack_top - access the top element
+stack_empty - checks whether the container is empty
+stack_size - returns the number of elements
+stack_push - inserts element at the top
+stack_pop - removes the top element
+
+4. queue design
+functions:
+queue_init - initialize the queue
+queue_destroy - destroy the queue
+queue_front - access the first element
+queue_back - access the last element
+queue_empty - checks whether the container is empty
+queue_size - returns the number of elements
+queue_push - inserts element at the end
+queue_pop - removes the first element
+
+5. pri_queue design
+functions:
+pri_queue_init - initialize the queue
+pri_queue_destroy - destroy the queue
+pri_queue_front - access the first element
+pri_queue_back - access the last element
+pri_queue_empty - checks whether the container is empty
+pri_queue_size - returns the number of elements
+pri_queue_push - inserts element at the end
+pri_queue_pop - removes the first element
+
+6. hset design
+functions:
+hset_init - initialize the hset
+hset_destroy - destroy the hset
+hset_empty - check whether the container is empty
+hset_size - return the number of elements
+hset_clear - remove all elements
+hset_insert - inserts elements
+hset_erase - erases element
+hset_find - finds element with specific key
