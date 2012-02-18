@@ -13,6 +13,7 @@ vector_insert - insert to vector at i
 vector_clear - remove all elements in vector
 vector_delete - delete element at position i
 vector_replace - replace element at position i
+vector_reserve - reserve place for element
 
 2. flist degisn
 functions:

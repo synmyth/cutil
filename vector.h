@@ -28,9 +28,9 @@ inline void* vector_back(struct vector *v);
 inline void vector_append(struct vector *v, void *element);
 void vector_insert(struct vector *v, void *element, size_t position);
 void vector_replace(struct vector *v, void *element, size_t position);
+void vector_reserve(struct vector *v, size_t n);
 void vector_clear(struct vector *v);
 void vector_delete(struct vector *v, size_t position);
-inline void __expand(struct vector *v);
 inline void __default_copy_func(void *dest, void *src, size_t elem_size);
 
 void vector_init(struct vector *v, size_t elem_size,
@@ -105,7 +105,7 @@ void vector_insert(struct vector *v, void *element, size_t position)
 	assert(v && v->array && element && position <= v->size);
 
 	if (v->size == v->capacity) {
-		__expand(v);
+		vector_reserve(v, v->capacity * 2);
 	}
 
 	char *pos_ptr = (char *)v->array + position * v->elem_size;
@@ -135,6 +135,14 @@ void vector_replace(struct vector *v, void *element, size_t position)
 	}
 }
 
+void vector_reserve(struct vector *v, size_t n)
+{
+	assert(v && n <= capacity);
+
+	v->capacity = n;
+	v->array = realloc(v->array, v->capacity * v->elem_size);
+}
+
 void vector_clear(struct vector *v)
 {
 	assert(v && v->array);
@@ -160,12 +168,6 @@ void vector_delete(struct vector *v, size_t position)
 	memmove(pos_ptr, pos_ptr + v->elem_size,
 			(v->size - position - 1) * v->elem_size);
 	v->size--;
-}
-
-inline void __expand(struct vector *v)
-{
-	v->capacity *= 2;
-	v->array = realloc(v->array, v->capacity * v->elem_size);
 }
 
 inline void __default_copy_func(void *dest, void *src, size_t elem_size)
