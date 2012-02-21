@@ -3,8 +3,7 @@
 #include <assert.h>
 #include <stdlib.h>
 #include <string.h>
-
-#define DEFAULT_CONTAINER_CAPACITY	32
+#include "util_define.h"
 
 struct vector {
 	void *array;
@@ -168,11 +167,6 @@ void vector_delete(struct vector *v, size_t position)
 	memmove(pos_ptr, pos_ptr + v->elem_size,
 			(v->size - position - 1) * v->elem_size);
 	v->size--;
-}
-
-inline void __default_copy_func(void *dest, void *src, size_t elem_size)
-{
-	memcpy(dest, src, elem_size);
 }
 
 #endif
