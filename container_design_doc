@@ -67,3 +67,18 @@ hset_clear - remove all elements
 hset_insert - inserts elements
 hset_erase - erases element
 hset_find - finds element with specific key
+
+7. deque design(double ended queue, without insert and erase)
+functions:
+deque_init - initialize the deque
+deque_destroy - destroy the deque
+deque_empty - check whether the container is empty
+deque_size - return the number of elements
+deque_at - access specified element with bounds checking
+deque_front - access the first element
+deque_end - access the last element
+deque_clear - clears the contents
+deque_push_back - inserts elements to the end
+deque_pop_back - removes the last element
+deque_push_front - inserts elements to the beginning
+deque_pop_front - removes the first element
