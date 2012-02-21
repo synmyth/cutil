@@ -76,7 +76,7 @@ deque_empty - check whether the container is empty
 deque_size - return the number of elements
 deque_at - access specified element with bounds checking
 deque_front - access the first element
-deque_end - access the last element
+deque_back - access the last element
 deque_clear - clears the contents
 deque_push_back - inserts elements to the end
 deque_pop_back - removes the last element
