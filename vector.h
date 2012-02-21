@@ -30,7 +30,6 @@ void vector_replace(struct vector *v, void *element, size_t position);
 void vector_reserve(struct vector *v, size_t n);
 void vector_clear(struct vector *v);
 void vector_delete(struct vector *v, size_t position);
-inline void __default_copy_func(void *dest, void *src, size_t elem_size);
 
 void vector_init(struct vector *v, size_t elem_size,
 		void (*copy_func)(void *, void *), void (*free_func)(void *))
