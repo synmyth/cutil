@@ -31,6 +31,7 @@ inline void vector_reserve(struct vector *v, size_t n);
 void vector_clear(struct vector *v);
 void vector_delete(struct vector *v, size_t position);
 
+/* initialize the vector */
 void vector_init(struct vector *v, size_t elem_size,
 		void (*copy_func)(void *, void *), void (*free_func)(void *))
 {
@@ -45,6 +46,7 @@ void vector_init(struct vector *v, size_t elem_size,
 	v->free = free_func;
 }
 
+/* destroy vector, free memory */
 inline void vector_destroy(struct vector *v)
 {
 	assert(v);
@@ -56,48 +58,56 @@ inline void vector_destroy(struct vector *v)
 	}
 }
 
+/* checks whether the container is empty */
 inline int vector_empty(struct vector *v)
 {
 	assert(v);
 	return !v->size;
 }
 
+/* returns the number of elements that can be held in currently allocated storage */
 inline size_t vector_capacity(struct vector *v)
 {
 	assert(v);
 	return v->capacity;
 }
 
+/* returns the number of elements */
 inline size_t vector_size(struct vector *v)
 {
 	assert(v);
 	return v->size;
 }
 
+/* access specified element with bounds checking */
 inline void* vector_at(struct vector *v, size_t position)
 {
 	assert(v && v->array && position < v->size);
 	return (char *)v->array + position * v->elem_size;
 }
 
+/* access the first element */
 inline void* vector_front(struct vector *v)
 {
 	assert(v);
 	return vector_at(v, 0);
 }
 
+/* access the last element */
 inline void* vector_back(struct vector *v)
 {
 	assert(v && v->size);
 	return vector_at(v, v->size - 1);
 }
 
+/* inserts elements to the end */
 inline void vector_append(struct vector *v, void *element)
 {
 	assert(v);
 	vector_insert(v, element, v->size);
 }
 
+/* inserts elements */
 void vector_insert(struct vector *v, void *element, size_t position)
 {
 	assert(v && v->array && element && position <= v->size);
@@ -117,6 +127,7 @@ void vector_insert(struct vector *v, void *element, size_t position)
 	v->size++;
 }
 
+/* replaces specified element */
 void vector_replace(struct vector *v, void *element, size_t position)
 {
 	assert(v && element && position < v->size);
@@ -133,6 +144,7 @@ void vector_replace(struct vector *v, void *element, size_t position)
 	}
 }
 
+/* reserves storage */
 inline void vector_reserve(struct vector *v, size_t n)
 {
 	assert(v && n > v->capacity);
@@ -141,6 +153,7 @@ inline void vector_reserve(struct vector *v, size_t n)
 	v->array = realloc(v->array, v->capacity * v->elem_size);
 }
 
+/* clears the contents */
 void vector_clear(struct vector *v)
 {
 	assert(v && v->array);
@@ -154,6 +167,7 @@ void vector_clear(struct vector *v)
 	v->size = 0;
 }
 
+/* deletes element */
 void vector_delete(struct vector *v, size_t position)
 {
 	assert(v && v->array && position < v->size);
