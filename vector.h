@@ -17,7 +17,7 @@ struct vector {
 /* function prototype */
 void vector_init(struct vector *v, size_t elem_size,
 		void (*copy_func)(void *, void *), void (*free_func)(void *));
-void vector_destroy(struct vector *v);
+inline void vector_destroy(struct vector *v);
 inline int vector_empty(struct vector *v);
 inline size_t vector_capacity(struct vector *v);
 inline size_t vector_size(struct vector *v);
@@ -27,7 +27,7 @@ inline void* vector_back(struct vector *v);
 inline void vector_append(struct vector *v, void *element);
 void vector_insert(struct vector *v, void *element, size_t position);
 void vector_replace(struct vector *v, void *element, size_t position);
-void vector_reserve(struct vector *v, size_t n);
+inline void vector_reserve(struct vector *v, size_t n);
 void vector_clear(struct vector *v);
 void vector_delete(struct vector *v, size_t position);
 
@@ -45,7 +45,7 @@ void vector_init(struct vector *v, size_t elem_size,
 	v->free = free_func;
 }
 
-void vector_destroy(struct vector *v)
+inline void vector_destroy(struct vector *v)
 {
 	assert(v);
 
@@ -133,7 +133,7 @@ void vector_replace(struct vector *v, void *element, size_t position)
 	}
 }
 
-void vector_reserve(struct vector *v, size_t n)
+inline void vector_reserve(struct vector *v, size_t n)
 {
 	assert(v && n > v->capacity);
 
