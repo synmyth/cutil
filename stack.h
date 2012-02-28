@@ -54,7 +54,7 @@ inline void stack_push(struct stack *s, void *element)
 /* removes the top element */
 inline void stack_pop(struct stack *s, void *element)
 {
-	assert(s && !stack_empty(s));
+	assert(s && !stack_empty(s) && element);
 	deque_pop_back(&s->d, element);
 }
 
