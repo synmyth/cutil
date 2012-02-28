@@ -54,14 +54,14 @@ inline void stack_push(struct stack *s, void *element)
 /* removes the top element */
 inline void stack_pop(struct stack *s, void *element)
 {
-	assert(s);
+	assert(s && !stack_empty(s));
 	deque_pop_back(&s->d, element);
 }
 
 /* access the top element */
 inline void* stack_top(struct stack *s)
 {
-	assert(s);
+	assert(s && !stack_empty(s));
 	return deque_back(&s->d);
 }
 
