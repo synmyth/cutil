@@ -47,7 +47,7 @@ void __block_destroy(struct deque *d, struct block *b);
 void deque_init(struct deque *d, size_t elem_size,
 		void (*copy_func)(void *, void *), void (*free_func)(void *))
 {
-	assert(d);
+	assert(d && elem_size > 0);
 
 	memset(d, 0, sizeof(struct deque));
 	d->capacity = DEFAULT_CONTAINER_CAPACITY;

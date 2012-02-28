@@ -19,7 +19,7 @@ inline void* stack_top(struct stack *s);
 inline void stack_init(struct stack *s, size_t elem_size,
 		void (*copy_func)(void *, void *), void (*free_func)(void *))
 {
-	assert(s);
+	assert(s && elem_size > 0);
 	deque_init(&s->d, elem_size, copy_func, free_func);
 }
 
