@@ -82,3 +82,25 @@ deque_push_back - inserts elements to the end
 deque_pop_back - removes the last element
 deque_push_front - inserts elements to the beginning
 deque_pop_front - removes the first element
+
+8. list design
+functions:
+list_init - initialize the list
+list_destroy - destroy the list
+list_empty - checks whether the container is empty
+list_size - returns the number of elements
+list_front - access the first element
+list_back - access the last element
+list_clear - clears the contents
+list_push_back - inserts elements to the end
+list_pop_back - removes the last element
+list_push_front - inserts elements to the beginning
+list_pop_front - removes the first element
+list_reverse - reverses the order of the elements
+list_insert - ?inserts elements
+list_erase - ?erases elements
+list_merge - ?merges two sorted lists
+list_splice - ?moves elements from another list
+list_remove - ?removes elements
+list_unique - ?removes consecutive duplicate elements
+list_sort - ?sorts the elements
