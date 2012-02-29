@@ -138,11 +138,7 @@ inline void list_pop_back(struct list *l, void *element)
 	struct node *node_before_last = last->prev;
 
 	/* copy element */
-	if (l->copy != NULL) {
-		l->copy(element, last->data);
-	} else {
-		__default_copy_func(element, last->data, l->elem_size);
-	}
+	CONTAINER_COPY(element, last->data, l);
 
 	/* remove last node */
 	head->prev = node_before_last;
@@ -181,11 +177,7 @@ inline void list_pop_front(struct list *l, void *element)
 	struct node *node_after_first = first->next;
 
 	/* copy element */
-	if (l->copy != NULL) {
-		l->copy(element, first->data);
-	} else {
-		__default_copy_func(element, first->data, l->elem_size);
-	}
+	CONTAINER_COPY(element, first->data, l);
 
 	/* remove last node */
 	head->next = node_after_first;
@@ -223,11 +215,7 @@ inline struct node* __alloc_new_node(struct list *l, void *element)
 	assert(tmp->data);
 
 	/* copy element to new node */
-	if (l->copy != NULL) {
-		l->copy(tmp->data, element);
-	} else {
-		__default_copy_func(tmp->data, element, l->elem_size);
-	}
+	CONTAINER_COPY(tmp->data, element, l);
 
 	return tmp;
 }
