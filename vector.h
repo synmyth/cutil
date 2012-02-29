@@ -119,11 +119,7 @@ void vector_insert(struct vector *v, void *element, size_t position)
 	char *pos_ptr = (char *)v->array + position * v->elem_size;
 	memmove(pos_ptr + v->elem_size, pos_ptr,
 			(v->size - position) * v->elem_size);
-	if (v->copy != NULL) {
-		v->copy(pos_ptr, element);
-	} else {
-		__default_copy_func(pos_ptr, element, v->elem_size);
-	}
+	CONTAINER_COPY(pos_ptr, element, v);
 	v->size++;
 }
 
@@ -137,11 +133,7 @@ void vector_replace(struct vector *v, void *element, size_t position)
 		v->free(pos_ptr);
 	}
 
-	if (v->copy != NULL) {
-		v->copy(pos_ptr, element);
-	} else {
-		__default_copy_func(pos_ptr, element, v->elem_size);
-	}
+	CONTAINER_COPY(pos_ptr, element, v);
 }
 
 /* reserves storage */
