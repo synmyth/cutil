@@ -139,7 +139,7 @@ void vector_replace(struct vector *v, void *element, size_t position)
 /* reserves storage */
 inline void vector_reserve(struct vector *v, size_t n)
 {
-	assert(v && n > v->capacity);
+	assert(v && n >= v->size);
 
 	v->capacity = n;
 	v->array = realloc(v->array, v->capacity * v->elem_size);
