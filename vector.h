@@ -24,7 +24,8 @@ inline size_t vector_size(struct vector *v);
 inline void* vector_at(struct vector *v, size_t position);
 inline void* vector_front(struct vector *v);
 inline void* vector_back(struct vector *v);
-inline void vector_append(struct vector *v, void *element);
+inline void vector_push_back(struct vector *v, void *element);
+inline void vector_pop_back(struct vector *v, void *element);
 void vector_insert(struct vector *v, void *element, size_t position);
 void vector_replace(struct vector *v, void *element, size_t position);
 inline void vector_reserve(struct vector *v, size_t n);
@@ -101,10 +102,20 @@ inline void* vector_back(struct vector *v)
 }
 
 /* inserts elements to the end */
-inline void vector_append(struct vector *v, void *element)
+inline void vector_push_back(struct vector *v, void *element)
 {
-	assert(v);
+	assert(v && element && v->array);
 	vector_insert(v, element, v->size);
+}
+
+/* removes the last element */
+inline void vector_pop_back(struct vector *v, void *element)
+{
+	assert(v && element && v->array && !vector_empty(v));
+
+	void *src = (char *)v->array + (v->size - 1) * v->elem_size;
+	CONTAINER_COPY(element, src, v);
+	v->size--;
 }
 
 /* inserts elements */
@@ -117,8 +128,10 @@ void vector_insert(struct vector *v, void *element, size_t position)
 	}
 
 	char *pos_ptr = (char *)v->array + position * v->elem_size;
-	memmove(pos_ptr + v->elem_size, pos_ptr,
-			(v->size - position) * v->elem_size);
+	if (position < v->size) {
+		memmove(pos_ptr + v->elem_size, pos_ptr,
+				(v->size - position) * v->elem_size);
+	}
 	CONTAINER_COPY(pos_ptr, element, v);
 	v->size++;
 }
