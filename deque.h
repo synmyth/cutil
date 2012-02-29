@@ -179,11 +179,7 @@ void deque_push_back(struct deque *d, void *element)
 
 	/* copy the element to destination */
 	void *dest = (char *)insert->array + d->elem_size * element_index;
-	if (d->copy != NULL) {
-		d->copy(dest, element);
-	} else {
-		__default_copy_func(dest, element, d->elem_size);
-	}
+	CONTAINER_COPY(dest, element, d);
 
 	/* modify block descriptor */
 	insert->end = element_index;
@@ -202,11 +198,7 @@ void deque_pop_back(struct deque *d, void *element)
 
 	/* copy the element to destination */
 	void *src = (char *)last_block->array + d->elem_size * last_block->end;
-	if (d->copy != NULL) {
-		d->copy(element, src);
-	} else {
-		__default_copy_func(element, src, d->elem_size);
-	}
+	CONTAINER_COPY(element, src, d);
 
 	/* modify block descriptor */
 	if (last_block->size == 1) {
@@ -263,11 +255,7 @@ void deque_push_front(struct deque *d, void *element)
 
 	/* copy the element to destination */
 	void *dest = (char *)insert->array + d->elem_size * element_index;
-	if (d->copy != NULL) {
-		d->copy(dest, element);
-	} else {
-		__default_copy_func(dest, element, d->elem_size);
-	}
+	CONTAINER_COPY(dest, element, d);
 
 	/* modify block descriptor */
 	insert->begin = element_index;
@@ -286,11 +274,7 @@ void deque_pop_front(struct deque *d, void *element)
 
 	/* copy the element to destination */
 	void *src = (char *)first_block->array + d->elem_size * first_block->begin;
-	if (d->copy != NULL) {
-		d->copy(element, src);
-	} else {
-		__default_copy_func(element, src, d->elem_size);
-	}
+	CONTAINER_COPY(element, src, d);
 
 	/* modify block descriptor */
 	if (first_block->size == 1) {
