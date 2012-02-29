@@ -5,14 +5,14 @@
 #include <string.h>
 #include "util_define.h"
 
-struct node {
-	struct node *prev;
-	struct node *next;
+struct list_node {
+	struct list_node *prev;
+	struct list_node *next;
 	void *data;
 };
 
 struct list {
-	struct node head;
+	struct list_node head;
 	size_t size;
 	size_t elem_size;
 	void (*copy)(void *dest, void *src);
@@ -32,8 +32,8 @@ inline void list_pop_back(struct list *l, void *element);
 inline void list_push_front(struct list *l, void *element);
 inline void list_pop_front(struct list *l, void *element);
 void list_reverse(struct list *l);
-inline struct node* __alloc_new_node(struct list *l, void *element);
-inline void __free_node(struct list *l, struct node *n);
+inline struct list_node* __alloc_new_list_node(struct list *l, void *element);
+inline void __free_list_node(struct list *l, struct list_node *n);
 
 /* initialize the list */
 void list_init(struct list *l, size_t elem_size,
@@ -42,7 +42,7 @@ void list_init(struct list *l, size_t elem_size,
 	assert(l && elem_size > 0);
 
 	memset(l, 0, sizeof(struct list));
-	struct node *head = &l->head;
+	struct list_node *head = &l->head;
 	head->prev = head->next = head;
 	l->elem_size = elem_size;
 	l->copy = copy_func;
@@ -74,7 +74,7 @@ inline size_t list_size(struct list *l)
 inline void* list_front(struct list *l)
 {
 	assert(l && !list_empty(l));
-	struct node *first = l->head.next;
+	struct list_node *first = l->head.next;
 	assert (first && first->data);
 	return first->data;
 }
@@ -83,7 +83,7 @@ inline void* list_front(struct list *l)
 inline void* list_back(struct list *l)
 {
 	assert(l && !list_empty(l));
-	struct node *last = l->head.prev;
+	struct list_node *last = l->head.prev;
 	assert(last && last->data);
 	return last->data;
 }
@@ -93,13 +93,13 @@ void list_clear(struct list *l)
 {
 	assert(l);
 
-	struct node *head = &l->head;
-	struct node *next = head->next;
+	struct list_node *head = &l->head;
+	struct list_node *next = head->next;
 	while (next != head) {
-		struct node *tmp = next->next;
+		struct list_node *tmp = next->next;
 		head->next = tmp;
 		tmp->prev = head;
-		__free_node(l, next);
+		__free_list_node(l, next);
 		next = tmp;
 	}
 
@@ -114,12 +114,12 @@ inline void list_push_back(struct list *l, void *element)
 	assert(l && element);
 
 	/* malloc new node */
-	struct node *tmp = __alloc_new_node(l, element);
+	struct list_node *tmp = __alloc_new_list_node(l, element);
 	assert(tmp);
 
 	/* inserts the new node to list */
-	struct node *head = &l->head;
-	struct node *last = head->prev;
+	struct list_node *head = &l->head;
+	struct list_node *last = head->prev;
 	head->prev = tmp;
 	tmp->next = head;
 	tmp->prev = last;
@@ -133,9 +133,9 @@ inline void list_pop_back(struct list *l, void *element)
 {
 	assert(l && element && !list_empty(l));
 
-	struct node *head = &l->head;
-	struct node *last = head->prev;
-	struct node *node_before_last = last->prev;
+	struct list_node *head = &l->head;
+	struct list_node *last = head->prev;
+	struct list_node *node_before_last = last->prev;
 
 	/* copy element */
 	CONTAINER_COPY(element, last->data, l);
@@ -143,7 +143,7 @@ inline void list_pop_back(struct list *l, void *element)
 	/* remove last node */
 	head->prev = node_before_last;
 	node_before_last->next = head;
-	__free_node(l, last);
+	__free_list_node(l, last);
 	l->size--;
 }
 
@@ -153,12 +153,12 @@ inline void list_push_front(struct list *l, void *element)
 	assert(l && element);
 
 	/* malloc new node */
-	struct node *tmp = __alloc_new_node(l, element);
+	struct list_node *tmp = __alloc_new_list_node(l, element);
 	assert(tmp);
 
 	/* inserts the new node to list */
-	struct node *head = &l->head;
-	struct node *first = head->next;
+	struct list_node *head = &l->head;
+	struct list_node *first = head->next;
 	head->next = tmp;
 	tmp->prev = head;
 	tmp->next = first;
@@ -172,9 +172,9 @@ inline void list_pop_front(struct list *l, void *element)
 {
 	assert(l && element && !list_empty(l));
 
-	struct node *head = &l->head;
-	struct node *first = head->next;
-	struct node *node_after_first = first->next;
+	struct list_node *head = &l->head;
+	struct list_node *first = head->next;
+	struct list_node *node_after_first = first->next;
 
 	/* copy element */
 	CONTAINER_COPY(element, first->data, l);
@@ -182,7 +182,7 @@ inline void list_pop_front(struct list *l, void *element)
 	/* remove last node */
 	head->next = node_after_first;
 	node_after_first->prev = head;
-	__free_node(l, first);
+	__free_list_node(l, first);
 	l->size--;
 }
 
@@ -191,11 +191,11 @@ void list_reverse(struct list *l)
 {
 	assert(l);
 
-	struct node *head = &l->head;
-	struct node *prev = head;
-	struct node *next = head->next;
+	struct list_node *head = &l->head;
+	struct list_node *prev = head;
+	struct list_node *next = head->next;
 	while (next != head) {
-		struct node *tmp = next->next;
+		struct list_node *tmp = next->next;
 		prev->prev = next;
 		next->next = prev;
 		prev = next;
@@ -206,10 +206,10 @@ void list_reverse(struct list *l)
 	next->next = prev;
 }
 
-inline struct node* __alloc_new_node(struct list *l, void *element)
+inline struct list_node* __alloc_new_list_node(struct list *l, void *element)
 {
 	/* malloc new node */
-	struct node *tmp = malloc(sizeof(struct node));
+	struct list_node *tmp = malloc(sizeof(struct list_node));
 	assert(tmp);
 	tmp->data = malloc(l->elem_size);
 	assert(tmp->data);
@@ -220,7 +220,7 @@ inline struct node* __alloc_new_node(struct list *l, void *element)
 	return tmp;
 }
 
-inline void __free_node(struct list *l, struct node *n)
+inline void __free_list_node(struct list *l, struct list_node *n)
 {
 	if (l->free != NULL) {
 		l->free(n->data);
