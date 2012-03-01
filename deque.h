@@ -67,6 +67,8 @@ inline void deque_destroy(struct deque *d)
 	assert(d);
 	deque_clear(d);
 	free(d->array);
+	d->array = NULL;
+	d->capacity = 0;
 }
 
 /* check whether the container is empty */
@@ -207,6 +209,13 @@ void deque_pop_back(struct deque *d)
 
 		d->size--;
 	} else {
+		/* free the last element */
+		void *dest = (char *)last_block->array +
+			d->elem_size * last_block->end;
+		if (d->free != NULL) {
+			d->free(dest);
+		}
+
 		last_block->end--;
 		last_block->size--;
 	}
@@ -279,6 +288,13 @@ void deque_pop_front(struct deque *d)
 
 		d->size--;
 	} else {
+		/* free the first element */
+		void *dest = (char *)first_block->array +
+			d->elem_size * first_block->begin;
+		if (d->free != NULL) {
+			d->free(dest);
+		}
+
 		first_block->begin++;
 		first_block->size--;
 	}
