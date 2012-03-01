@@ -12,7 +12,7 @@ inline void stack_destroy(struct stack *s);
 inline int stack_empty(struct stack *s);
 inline size_t stack_size(struct stack *s);
 inline void stack_push(struct stack *s, void *element);
-inline void stack_pop(struct stack *s, void* element);
+inline void stack_pop(struct stack *s);
 inline void* stack_top(struct stack *s);
 
 /* initialize the stack */
@@ -52,10 +52,10 @@ inline void stack_push(struct stack *s, void *element)
 }
 
 /* removes the top element */
-inline void stack_pop(struct stack *s, void *element)
+inline void stack_pop(struct stack *s)
 {
-	assert(s && !stack_empty(s) && element);
-	deque_pop_back(&s->d, element);
+	assert(s && !stack_empty(s));
+	deque_pop_back(&s->d);
 }
 
 /* access the top element */
