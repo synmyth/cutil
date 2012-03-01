@@ -37,9 +37,9 @@ inline void* deque_front(struct deque *d);
 inline void* deque_back(struct deque *d);
 void deque_clear(struct deque *d);
 void deque_push_back(struct deque *d, void *element);
-void deque_pop_back(struct deque *d, void *element);
+void deque_pop_back(struct deque *d);
 void deque_push_front(struct deque *d, void *element);
-void deque_pop_front(struct deque *d, void *element);
+void deque_pop_front(struct deque *d);
 void __expand(struct deque *d);
 void __block_destroy(struct deque *d, struct block *b);
 
@@ -188,17 +188,13 @@ void deque_push_back(struct deque *d, void *element)
 }
 
 /* removes the last element */
-void deque_pop_back(struct deque *d, void *element)
+void deque_pop_back(struct deque *d)
 {
-	assert(d && d->array && element && d->deque_size > 0);
+	assert(d && d->array && !deque_empty(d));
 
 	/* find the last block */
 	struct block *last_block = &d->array[d->end];
 	assert(last_block->array && last_block->size > 0);
-
-	/* copy the element to destination */
-	void *src = (char *)last_block->array + d->elem_size * last_block->end;
-	CONTAINER_COPY(element, src, d);
 
 	/* modify block descriptor */
 	if (last_block->size == 1) {
@@ -264,17 +260,13 @@ void deque_push_front(struct deque *d, void *element)
 }
 
 /* removes the first element */
-void deque_pop_front(struct deque *d, void *element)
+void deque_pop_front(struct deque *d)
 {
-	assert(d && d->array && element && d->deque_size > 0);
+	assert(d && d->array && !deque_empty(d));
 
 	/* find the last block */
 	struct block *first_block = &d->array[d->begin];
 	assert(first_block->array && first_block->size > 0);
-
-	/* copy the element to destination */
-	void *src = (char *)first_block->array + d->elem_size * first_block->begin;
-	CONTAINER_COPY(element, src, d);
 
 	/* modify block descriptor */
 	if (first_block->size == 1) {
