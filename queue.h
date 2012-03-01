@@ -14,7 +14,7 @@ inline size_t queue_size(struct queue *q);
 inline void* queue_front(struct queue *q);
 inline void* queue_back(struct queue *q);
 inline void queue_push(struct queue *q, void *element);
-inline void queue_pop(struct queue *q, void *element);
+inline void queue_pop(struct queue *q);
 
 /* initialize the queue */
 inline void queue_init(struct queue *q, size_t elem_size,
@@ -67,10 +67,10 @@ inline void queue_push(struct queue *q, void *element)
 }
 
 /* removes the first element */
-inline void queue_pop(struct queue *q, void *element)
+inline void queue_pop(struct queue *q)
 {
-	assert(q && element && !queue_empty(q));
-	deque_pop_front(&q->d, element);
+	assert(q && !queue_empty(q));
+	deque_pop_front(&q->d);
 }
 
 #endif
