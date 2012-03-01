@@ -25,7 +25,7 @@ inline void* vector_at(struct vector *v, size_t position);
 inline void* vector_front(struct vector *v);
 inline void* vector_back(struct vector *v);
 inline void vector_push_back(struct vector *v, void *element);
-inline void vector_pop_back(struct vector *v, void *element);
+inline void vector_pop_back(struct vector *v);
 void vector_insert(struct vector *v, void *element, size_t position);
 void vector_replace(struct vector *v, void *element, size_t position);
 inline void vector_reserve(struct vector *v, size_t n);
@@ -111,12 +111,9 @@ inline void vector_push_back(struct vector *v, void *element)
 }
 
 /* removes the last element */
-inline void vector_pop_back(struct vector *v, void *element)
+inline void vector_pop_back(struct vector *v)
 {
-	assert(v && element && v->array && !vector_empty(v));
-
-	void *src = (char *)v->array + (v->size - 1) * v->elem_size;
-	CONTAINER_COPY(element, src, v);
+	assert(v && v->array && !vector_empty(v));
 	vector_delete(v, v->size - 1);
 }
 
