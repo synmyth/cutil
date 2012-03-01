@@ -57,6 +57,8 @@ inline void vector_destroy(struct vector *v)
 		free(v->array);
 		v->array = NULL;
 	}
+
+	v->capacity = 0;
 }
 
 /* checks whether the container is empty */
@@ -115,7 +117,7 @@ inline void vector_pop_back(struct vector *v, void *element)
 
 	void *src = (char *)v->array + (v->size - 1) * v->elem_size;
 	CONTAINER_COPY(element, src, v);
-	v->size--;
+	vector_delete(v, v->size - 1);
 }
 
 /* inserts elements */
