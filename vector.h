@@ -29,6 +29,7 @@ inline void vector_pop_back(struct vector *v);
 void vector_insert(struct vector *v, void *element, size_t position);
 void vector_replace(struct vector *v, void *element, size_t position);
 inline void vector_reserve(struct vector *v, size_t n);
+inline void vector_resize(struct vector *v, size_t n);
 void vector_clear(struct vector *v);
 void vector_delete(struct vector *v, size_t position);
 
@@ -153,8 +154,25 @@ inline void vector_reserve(struct vector *v, size_t n)
 {
 	assert(v && n >= v->size);
 
-	v->capacity = n;
-	v->array = realloc(v->array, v->capacity * v->elem_size);
+	if (v->capacity != n) {
+		v->capacity = n;
+		v->array = realloc(v->array, v->capacity * v->elem_size);
+	}
+}
+
+inline void vector_resize(struct vector *v, size_t n)
+{
+	assert(v && n >= v->size);
+
+	if (v->capacity != n) {
+		v->capacity = n;
+		v->array = realloc(v->array, v->capacity * v->elem_size);
+	}
+
+	void *dest = (char *)v->array + v->elem_size * v->size;
+	size_t length = (n - v->size) * v->elem_size;
+	memset(dest, 0, length);
+	v->size = n;
 }
 
 /* clears the contents */
