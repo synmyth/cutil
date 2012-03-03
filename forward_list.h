@@ -31,8 +31,8 @@ void flist_clear(struct forward_list *l);
 inline void flist_push_front(struct forward_list *l, void *element);
 inline void flist_pop_front(struct forward_list *l);
 void flist_reverse(struct forward_list *l);
-void __iter_head(struct iterator *it, struct forward_list *l);
-void __iter_next(struct iterator *it, struct forward_list *l);
+void __flist_iter_head(struct iterator *it, struct forward_list *l);
+void __flist_iter_next(struct iterator *it, struct forward_list *l);
 inline struct flist_node* __alloc_new_flist_node(struct forward_list *l, void *element);
 inline void __free_flist_node(struct forward_list *l, struct flist_node *n);
 
@@ -46,8 +46,8 @@ void flist_init(struct forward_list *l, size_t elem_size,
 	l->elem_size = elem_size;
 	l->copy = copy_func;
 	l->free = free_func;
-	l->iter_head = __iter_head;
-	l->iter_next = __iter_next;
+	l->iter_head = __flist_iter_head;
+	l->iter_next = __flist_iter_next;
 }
 
 /* destroy the list */
@@ -154,7 +154,7 @@ void flist_reverse(struct forward_list *l)
 	l->head.next = prev;
 }
 
-void __iter_head(struct iterator *it, struct forward_list *l)
+void __flist_iter_head(struct iterator *it, struct forward_list *l)
 {
 	assert(it && l);
 
@@ -165,7 +165,7 @@ void __iter_head(struct iterator *it, struct forward_list *l)
 	it->size = flist_size(l);
 }
 
-void __iter_next(struct iterator *it, struct forward_list *l)
+void __flist_iter_next(struct iterator *it, struct forward_list *l)
 {
 	assert(it && l);
 
