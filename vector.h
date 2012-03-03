@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "util_define.h"
+#include "iterator.h"
 
 struct vector {
 	void *array;
@@ -12,6 +13,10 @@ struct vector {
 	size_t elem_size;
 	void (*copy)(void *dest, void *src);
 	void (*free)(void *element);
+	void (*iter_head)(struct iterator *it, struct vector *v);
+	void (*iter_next)(struct iterator *it, struct vector *v);
+	void (*iter_tail)(struct iterator *it, struct vector *v);
+	void (*iter_prev)(struct iterator *it, struct vector *v);
 };
 
 /* function prototype */
@@ -32,6 +37,10 @@ inline void vector_reserve(struct vector *v, size_t n);
 inline void vector_resize(struct vector *v, size_t n);
 void vector_clear(struct vector *v);
 void vector_delete(struct vector *v, size_t position);
+void __vector_iter_head(struct iterator *it, struct vector *v);
+void __vector_iter_next(struct iterator *it, struct vector *v);
+void __vector_iter_tail(struct iterator *it, struct vector *v);
+void __vector_iter_prev(struct iterator *it, struct vector *v);
 
 /* initialize the vector */
 void vector_init(struct vector *v, size_t elem_size,
@@ -46,6 +55,10 @@ void vector_init(struct vector *v, size_t elem_size,
 	v->elem_size = elem_size;
 	v->copy = copy_func;
 	v->free = free_func;
+	v->iter_head = __vector_iter_head;
+	v->iter_next = __vector_iter_next;
+	v->iter_tail = __vector_iter_tail;
+	v->iter_prev = __vector_iter_prev;
 }
 
 /* destroy vector, free memory */
@@ -202,6 +215,41 @@ void vector_delete(struct vector *v, size_t position)
 	memmove(pos_ptr, pos_ptr + v->elem_size,
 			(v->size - position - 1) * v->elem_size);
 	v->size--;
+}
+
+void __vector_iter_head(struct iterator *it, struct vector *v)
+{
+	assert(it && v);
+
+	it->ptr = (!vector_empty(v)) ? vector_front(v) : NULL;
+	it->data = it->ptr;
+	it->i = 0;
+	it->size = vector_size(v);
+}
+
+void __vector_iter_next(struct iterator *it, struct vector *v)
+{
+	assert(it && v);
+
+	it->ptr = (++(it->i) < v->size) ? vector_at(v, it->i) : NULL;
+	it->data = it->ptr;
+}
+
+void __vector_iter_tail(struct iterator *it, struct vector *v)
+{
+	assert(it && v);
+
+	it->ptr = (!vector_empty(v)) ? vector_back(v) : NULL;
+	it->data = it->ptr;
+	it->i = vector_size(v) - 1;
+	it->size = vector_size(v);
+}
+void __vector_iter_prev(struct iterator *it, struct vector *v)
+{
+	assert(it && v);
+
+	it->ptr = ((it->i)-- > 0) ? vector_at(v, it->i) : NULL;
+	it->data = it->ptr;
 }
 
 #endif
