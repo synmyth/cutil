@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "util_define.h"
+#include "iterator.h"
 
 struct flist_node {
 	struct flist_node *next;
@@ -16,6 +17,8 @@ struct forward_list {
 	size_t elem_size;
 	void (*copy)(void *dest, void *src);
 	void (*free)(void *element);
+	void (*iter_head)(struct iterator *it, struct forward_list *l);
+	void (*iter_next)(struct iterator *it, struct forward_list *l);
 };
 
 void flist_init(struct forward_list *l, size_t elem_size,
@@ -28,6 +31,8 @@ void flist_clear(struct forward_list *l);
 inline void flist_push_front(struct forward_list *l, void *element);
 inline void flist_pop_front(struct forward_list *l);
 void flist_reverse(struct forward_list *l);
+void __iter_head(struct iterator *it, struct forward_list *l);
+void __iter_next(struct iterator *it, struct forward_list *l);
 inline struct flist_node* __alloc_new_flist_node(struct forward_list *l, void *element);
 inline void __free_flist_node(struct forward_list *l, struct flist_node *n);
 
@@ -41,6 +46,8 @@ void flist_init(struct forward_list *l, size_t elem_size,
 	l->elem_size = elem_size;
 	l->copy = copy_func;
 	l->free = free_func;
+	l->iter_head = __iter_head;
+	l->iter_next = __iter_next;
 }
 
 /* destroy the list */
@@ -145,6 +152,27 @@ void flist_reverse(struct forward_list *l)
 	}
 
 	l->head.next = prev;
+}
+
+void __iter_head(struct iterator *it, struct forward_list *l)
+{
+	assert(it && l);
+
+	struct flist_node *first = l->head.next;
+	it->ptr = first;
+	it->data = (first) ? first->data : NULL;
+	it->i = 0;
+	it->size = flist_size(l);
+}
+
+void __iter_next(struct iterator *it, struct forward_list *l)
+{
+	assert(it && l);
+
+	struct flist_node *next = ((struct flist_node *)it->ptr)->next;
+	it->ptr = next;
+	it->data = (next) ? next->data : NULL;
+	it->i++;
 }
 
 inline struct flist_node* __alloc_new_flist_node(struct forward_list *l, void *element)
