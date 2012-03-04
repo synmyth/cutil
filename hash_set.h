@@ -204,7 +204,7 @@ void hset_find(struct hash_set *h, void *key, struct iterator *it)
 
 inline __set_key_size(struct hash_set *h, size_t key_size)
 {
-	assert(h && key_size > 0);
+	assert(h && key_size > 0 && key_size <= h->elem_size);
 	h->key_size = key_size;
 }
 
