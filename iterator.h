@@ -4,6 +4,8 @@
 struct iterator {
 	void *ptr;
 	void *data;
+	void *key;
+	size_t bkt_index;
 	size_t i;
 	size_t size;
 };
