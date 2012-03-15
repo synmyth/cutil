@@ -5,6 +5,8 @@
 #include <string.h>
 #include "util_define.h"
 
+typedef struct list list_t;
+
 struct list_node {
 	struct list_node *prev;
 	struct list_node *next;
@@ -19,24 +21,24 @@ struct list {
 	void (*free)(void *element);
 };
 
-void list_init(struct list *l, size_t elem_size,
+void list_init(list_t *l, size_t elem_size,
 		void (*copy_func)(void *, void *), void (*free_func)(void *));
-void list_destroy(struct list *l);
-inline int list_empty(struct list *l);
-inline size_t list_size(struct list *l);
-inline void* list_front(struct list *l);
-inline void* list_back(struct list *l);
-void list_clear(struct list *l);
-inline void list_push_back(struct list *l, void *element);
-inline void list_pop_back(struct list *l);
-inline void list_push_front(struct list *l, void *element);
-inline void list_pop_front(struct list *l);
-void list_reverse(struct list *l);
-inline struct list_node* __alloc_new_list_node(struct list *l, void *element);
-inline void __free_list_node(struct list *l, struct list_node *n);
+void list_destroy(list_t *l);
+inline int list_empty(list_t *l);
+inline size_t list_size(list_t *l);
+inline void* list_front(list_t *l);
+inline void* list_back(list_t *l);
+void list_clear(list_t *l);
+inline void list_push_back(list_t *l, void *element);
+inline void list_pop_back(list_t *l);
+inline void list_push_front(list_t *l, void *element);
+inline void list_pop_front(list_t *l);
+void list_reverse(list_t *l);
+inline struct list_node* __alloc_new_list_node(list_t *l, void *element);
+inline void __free_list_node(list_t *l, struct list_node *n);
 
 /* initialize the list */
-void list_init(struct list *l, size_t elem_size,
+void list_init(list_t *l, size_t elem_size,
 		void (*copy_func)(void *, void *), void (*free_func)(void *))
 {
 	assert(l && elem_size > 0);
@@ -50,28 +52,28 @@ void list_init(struct list *l, size_t elem_size,
 }
 
 /* destroy the list */
-void list_destroy(struct list *l)
+void list_destroy(list_t *l)
 {
 	assert(l);
 	list_clear(l);
 }
 
 /* checks whether the container is empty */
-inline int list_empty(struct list *l)
+inline int list_empty(list_t *l)
 {
 	assert(l);
 	return !l->size;
 }
 
 /* returns the number of elements */
-inline size_t list_size(struct list *l)
+inline size_t list_size(list_t *l)
 {
 	assert(l);
 	return l->size;
 }
 
 /* access the first element */
-inline void* list_front(struct list *l)
+inline void* list_front(list_t *l)
 {
 	assert(l && !list_empty(l));
 	struct list_node *first = l->head.next;
@@ -80,7 +82,7 @@ inline void* list_front(struct list *l)
 }
 
 /* access the last element */
-inline void* list_back(struct list *l)
+inline void* list_back(list_t *l)
 {
 	assert(l && !list_empty(l));
 	struct list_node *last = l->head.prev;
@@ -89,7 +91,7 @@ inline void* list_back(struct list *l)
 }
 
 /* clears the contents */
-void list_clear(struct list *l)
+void list_clear(list_t *l)
 {
 	assert(l);
 
@@ -109,7 +111,7 @@ void list_clear(struct list *l)
 }
 
 /* inserts elements to the end */
-inline void list_push_back(struct list *l, void *element)
+inline void list_push_back(list_t *l, void *element)
 {
 	assert(l && element);
 
@@ -129,7 +131,7 @@ inline void list_push_back(struct list *l, void *element)
 }
 
 /* removes the last element */
-inline void list_pop_back(struct list *l)
+inline void list_pop_back(list_t *l)
 {
 	assert(l && !list_empty(l));
 
@@ -145,7 +147,7 @@ inline void list_pop_back(struct list *l)
 }
 
 /* inserts elements to the beginning */
-inline void list_push_front(struct list *l, void *element)
+inline void list_push_front(list_t *l, void *element)
 {
 	assert(l && element);
 
@@ -165,7 +167,7 @@ inline void list_push_front(struct list *l, void *element)
 }
 
 /* removes the first element */
-inline void list_pop_front(struct list *l)
+inline void list_pop_front(list_t *l)
 {
 	assert(l && !list_empty(l));
 
@@ -181,7 +183,7 @@ inline void list_pop_front(struct list *l)
 }
 
 /* reverses the order of the elements */
-void list_reverse(struct list *l)
+void list_reverse(list_t *l)
 {
 	assert(l);
 
@@ -200,7 +202,7 @@ void list_reverse(struct list *l)
 	next->next = prev;
 }
 
-inline struct list_node* __alloc_new_list_node(struct list *l, void *element)
+inline struct list_node* __alloc_new_list_node(list_t *l, void *element)
 {
 	/* malloc new node */
 	struct list_node *tmp = malloc(sizeof(struct list_node));
@@ -214,7 +216,7 @@ inline struct list_node* __alloc_new_list_node(struct list *l, void *element)
 	return tmp;
 }
 
-inline void __free_list_node(struct list *l, struct list_node *n)
+inline void __free_list_node(list_t *l, struct list_node *n)
 {
 	if (l->free != NULL) {
 		l->free(n->data);
