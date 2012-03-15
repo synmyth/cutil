@@ -13,10 +13,10 @@ struct vector {
 	size_t elem_size;
 	void (*copy)(void *dest, void *src);
 	void (*free)(void *element);
-	void (*iter_head)(struct iterator *it, struct vector *v);
-	void (*iter_next)(struct iterator *it, struct vector *v);
-	void (*iter_tail)(struct iterator *it, struct vector *v);
-	void (*iter_prev)(struct iterator *it, struct vector *v);
+	void (*iter_head)(iterator_t *it, struct vector *v);
+	void (*iter_next)(iterator_t *it, struct vector *v);
+	void (*iter_tail)(iterator_t *it, struct vector *v);
+	void (*iter_prev)(iterator_t *it, struct vector *v);
 };
 
 /* function prototype */
@@ -37,10 +37,10 @@ inline void vector_reserve(struct vector *v, size_t n);
 inline void vector_resize(struct vector *v, size_t n);
 void vector_clear(struct vector *v);
 void vector_delete(struct vector *v, size_t position);
-void __vector_iter_head(struct iterator *it, struct vector *v);
-void __vector_iter_next(struct iterator *it, struct vector *v);
-void __vector_iter_tail(struct iterator *it, struct vector *v);
-void __vector_iter_prev(struct iterator *it, struct vector *v);
+void __vector_iter_head(iterator_t *it, struct vector *v);
+void __vector_iter_next(iterator_t *it, struct vector *v);
+void __vector_iter_tail(iterator_t *it, struct vector *v);
+void __vector_iter_prev(iterator_t *it, struct vector *v);
 
 /* initialize the vector */
 void vector_init(struct vector *v, size_t elem_size,
@@ -217,7 +217,7 @@ void vector_delete(struct vector *v, size_t position)
 	v->size--;
 }
 
-void __vector_iter_head(struct iterator *it, struct vector *v)
+void __vector_iter_head(iterator_t *it, struct vector *v)
 {
 	assert(it && v);
 
@@ -227,7 +227,7 @@ void __vector_iter_head(struct iterator *it, struct vector *v)
 	it->size = vector_size(v);
 }
 
-void __vector_iter_next(struct iterator *it, struct vector *v)
+void __vector_iter_next(iterator_t *it, struct vector *v)
 {
 	assert(it && v);
 
@@ -235,7 +235,7 @@ void __vector_iter_next(struct iterator *it, struct vector *v)
 	it->data = it->ptr;
 }
 
-void __vector_iter_tail(struct iterator *it, struct vector *v)
+void __vector_iter_tail(iterator_t *it, struct vector *v)
 {
 	assert(it && v);
 
@@ -244,7 +244,8 @@ void __vector_iter_tail(struct iterator *it, struct vector *v)
 	it->i = vector_size(v) - 1;
 	it->size = vector_size(v);
 }
-void __vector_iter_prev(struct iterator *it, struct vector *v)
+
+void __vector_iter_prev(iterator_t *it, struct vector *v)
 {
 	assert(it && v);
 

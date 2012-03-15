@@ -33,8 +33,8 @@ struct hash_set {
 	void (*copy)(void *dest, void *src);
 	void (*free)(void *element);
 	int (*compare)(void *e1, void *e2);
-	void (*iter_head)(struct iterator *it, struct hash_set *h);
-	void (*iter_next)(struct iterator *it, struct hash_set *h);
+	void (*iter_head)(iterator_t *it, struct hash_set *h);
+	void (*iter_next)(iterator_t *it, struct hash_set *h);
 };
 
 /* function prototype */
@@ -48,12 +48,12 @@ size_t hset_size(struct hash_set *h);
 void hset_clear(struct hash_set *h);
 void hset_insert(struct hash_set *h, void *key);
 void hset_erase(struct hash_set *h, void *key);
-void hset_find(struct hash_set *h, void *key, struct iterator *it);
+void hset_find(struct hash_set *h, void *key, iterator_t *it);
 inline __set_key_size(struct hash_set *h, size_t key_size);
 int __hset_insert_node(struct hash_set *h, struct chain_node *n);
 void __hset_expand(struct hash_set *h);
-void __hset_iter_head(struct iterator *it, struct hash_set *h);
-void __hset_iter_next(struct iterator *it, struct hash_set *h);
+void __hset_iter_head(iterator_t *it, struct hash_set *h);
+void __hset_iter_next(iterator_t *it, struct hash_set *h);
 inline void __free_bucket(struct hash_set *h, struct bucket *b);
 inline void __free_chain_node(struct hash_set *h, struct chain_node *n);
 
@@ -176,7 +176,7 @@ void hset_erase(struct hash_set *h, void *key)
 }
 
 /* finds element with sepcific key */
-void hset_find(struct hash_set *h, void *key, struct iterator *it)
+void hset_find(struct hash_set *h, void *key, iterator_t *it)
 {
 	assert(h && key && it);
 
@@ -287,11 +287,11 @@ void __hset_expand(struct hash_set *h)
 	free(old_buckets);
 }
 
-void __hset_iter_head(struct iterator *it, struct hash_set *h)
+void __hset_iter_head(iterator_t *it, struct hash_set *h)
 {
 	assert(it && h);
 
-	memset(it, 0, sizeof(struct iterator));
+	memset(it, 0, sizeof(iterator_t));
 	if (!hset_empty(h)) {
 		struct bucket *b = NULL;
 		size_t i;
@@ -315,7 +315,7 @@ void __hset_iter_head(struct iterator *it, struct hash_set *h)
 	}
 }
 
-void __hset_iter_next(struct iterator *it, struct hash_set *h)
+void __hset_iter_next(iterator_t *it, struct hash_set *h)
 {
 	assert(it && h && it->ptr);
 

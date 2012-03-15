@@ -17,8 +17,8 @@ struct forward_list {
 	size_t elem_size;
 	void (*copy)(void *dest, void *src);
 	void (*free)(void *element);
-	void (*iter_head)(struct iterator *it, struct forward_list *l);
-	void (*iter_next)(struct iterator *it, struct forward_list *l);
+	void (*iter_head)(iterator_t *it, struct forward_list *l);
+	void (*iter_next)(iterator_t *it, struct forward_list *l);
 };
 
 void flist_init(struct forward_list *l, size_t elem_size,
@@ -33,8 +33,8 @@ inline void flist_pop_front(struct forward_list *l);
 void flist_reverse(struct forward_list *l);
 void flist_copy(void *dest, void *src);
 void flist_free(void *element);
-void __flist_iter_head(struct iterator *it, struct forward_list *l);
-void __flist_iter_next(struct iterator *it, struct forward_list *l);
+void __flist_iter_head(iterator_t *it, struct forward_list *l);
+void __flist_iter_next(iterator_t *it, struct forward_list *l);
 inline struct flist_node* __alloc_new_flist_node(struct forward_list *l, void *element);
 inline void __free_flist_node(struct forward_list *l, struct flist_node *n);
 
@@ -163,7 +163,7 @@ void flist_copy(void *dest, void *src)
 	struct forward_list *dest_list = (struct forward_list *)dest;
 	struct forward_list *src_list = (struct forward_list *)src;
 	memset(dest_list, 0, sizeof(struct forward_list));
-	struct iterator it;
+	iterator_t it;
 	util_foreach(it, src_list) {
 		flist_push_front(dest_list, it.data);
 	}
@@ -176,7 +176,7 @@ void flist_free(void *element)
 	flist_destroy(l);
 }
 
-void __flist_iter_head(struct iterator *it, struct forward_list *l)
+void __flist_iter_head(iterator_t *it, struct forward_list *l)
 {
 	assert(it && l);
 
@@ -187,7 +187,7 @@ void __flist_iter_head(struct iterator *it, struct forward_list *l)
 	it->size = flist_size(l);
 }
 
-void __flist_iter_next(struct iterator *it, struct forward_list *l)
+void __flist_iter_next(iterator_t *it, struct forward_list *l)
 {
 	assert(it && l);
 
