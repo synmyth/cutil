@@ -11,7 +11,7 @@
 #define rchild(x)	(2 * x + 2)
 
 struct priority_queue {
-	struct vector v;
+	vector_t v;
 	void *tmp_elem;
 	int (*compare)(void *e1, void *e2);
 };
@@ -77,7 +77,7 @@ inline void* pqueue_top(struct priority_queue *q)
 inline void __exchange(struct priority_queue *q, size_t p1, size_t p2)
 {
 	assert(q && q->tmp_elem);
-	struct vector *v = &q->v;
+	vector_t *v = &q->v;
 	assert(p1 < vector_size(v) && p2 < vector_size(v));
 
 	void *ptr1 = vector_at(v, p1);
