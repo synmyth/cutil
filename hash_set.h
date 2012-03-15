@@ -9,7 +9,9 @@
 
 #define MAX_BUCKET_CAPACITY	11
 #define EQUALS(e1, e2, h)	(h->compare) ?	\
-	(!h->compare(e1, e2)) : (!memcmp(e1, e2, h->key_size))	
+	(!h->compare(e1, e2)) : (!memcmp(e1, e2, h->key_size))
+
+typedef struct hash_set hash_set_t;
 
 struct chain_node {
 	struct chain_node *next;
@@ -33,39 +35,39 @@ struct hash_set {
 	void (*copy)(void *dest, void *src);
 	void (*free)(void *element);
 	int (*compare)(void *e1, void *e2);
-	void (*iter_head)(iterator_t *it, struct hash_set *h);
-	void (*iter_next)(iterator_t *it, struct hash_set *h);
+	void (*iter_head)(iterator_t *it, hash_set_t *h);
+	void (*iter_next)(iterator_t *it, hash_set_t *h);
 };
 
 /* function prototype */
-void hset_init(struct hash_set *h, size_t elem_size,
+void hset_init(hash_set_t *h, size_t elem_size,
 		void (*copy_func)(void *, void *),
 		void (*free_func)(void *),
 		int (*cmp_func)(void *, void *));
-void hset_destroy(struct hash_set *h);
-int hset_empty(struct hash_set *h);
-size_t hset_size(struct hash_set *h);
-void hset_clear(struct hash_set *h);
-void hset_insert(struct hash_set *h, void *key);
-void hset_erase(struct hash_set *h, void *key);
-void hset_find(struct hash_set *h, void *key, iterator_t *it);
-inline __set_key_size(struct hash_set *h, size_t key_size);
-int __hset_insert_node(struct hash_set *h, struct chain_node *n);
-void __hset_expand(struct hash_set *h);
-void __hset_iter_head(iterator_t *it, struct hash_set *h);
-void __hset_iter_next(iterator_t *it, struct hash_set *h);
-inline void __free_bucket(struct hash_set *h, struct bucket *b);
-inline void __free_chain_node(struct hash_set *h, struct chain_node *n);
+void hset_destroy(hash_set_t *h);
+int hset_empty(hash_set_t *h);
+size_t hset_size(hash_set_t *h);
+void hset_clear(hash_set_t *h);
+void hset_insert(hash_set_t *h, void *key);
+void hset_erase(hash_set_t *h, void *key);
+void hset_find(hash_set_t *h, void *key, iterator_t *it);
+inline __set_key_size(hash_set_t *h, size_t key_size);
+int __hset_insert_node(hash_set_t *h, struct chain_node *n);
+void __hset_expand(hash_set_t *h);
+void __hset_iter_head(iterator_t *it, hash_set_t *h);
+void __hset_iter_next(iterator_t *it, hash_set_t *h);
+inline void __free_bucket(hash_set_t *h, struct bucket *b);
+inline void __free_chain_node(hash_set_t *h, struct chain_node *n);
 
 /* initialize the hash set */
-void hset_init(struct hash_set *h, size_t elem_size,
+void hset_init(hash_set_t *h, size_t elem_size,
 		void (*copy_func)(void *, void *),
 		void (*free_func)(void *),
 		int (*cmp_func)(void *, void *))
 {
 	assert(h && elem_size > 0);
 
-	memset(h, 0, sizeof(struct hash_set));
+	memset(h, 0, sizeof(hash_set_t));
 	h->bucket_size = DEFAULT_CONTAINER_CAPACITY;
 	h->buckets = malloc(sizeof(struct bucket) * h->bucket_size);
 	assert(h->buckets);
@@ -82,7 +84,7 @@ void hset_init(struct hash_set *h, size_t elem_size,
 }
 
 /* destroy the hash set */
-void hset_destroy(struct hash_set *h)
+void hset_destroy(hash_set_t *h)
 {
 	assert(h);
 	hset_clear(h);
@@ -91,21 +93,21 @@ void hset_destroy(struct hash_set *h)
 }
 
 /* checks whether the hash set is empty */
-int hset_empty(struct hash_set *h)
+int hset_empty(hash_set_t *h)
 {
 	assert(h);
 	return !h->size;
 }
 
 /* return the number of elements */
-size_t hset_size(struct hash_set *h)
+size_t hset_size(hash_set_t *h)
 {
 	assert(h);
 	return h->size;
 }
 
 /* remove all elements */
-void hset_clear(struct hash_set *h)
+void hset_clear(hash_set_t *h)
 {
 	assert(h);
 
@@ -117,7 +119,7 @@ void hset_clear(struct hash_set *h)
 }
 
 /* inserts elements */
-void hset_insert(struct hash_set *h, void *key)
+void hset_insert(hash_set_t *h, void *key)
 {
 	assert(h && key && h->buckets);
 
@@ -133,7 +135,7 @@ void hset_insert(struct hash_set *h, void *key)
 }
 
 /* erases elements */
-void hset_erase(struct hash_set *h, void *key)
+void hset_erase(hash_set_t *h, void *key)
 {
 	assert(h && key && h->buckets);
 
@@ -176,7 +178,7 @@ void hset_erase(struct hash_set *h, void *key)
 }
 
 /* finds element with sepcific key */
-void hset_find(struct hash_set *h, void *key, iterator_t *it)
+void hset_find(hash_set_t *h, void *key, iterator_t *it)
 {
 	assert(h && key && it);
 
@@ -202,14 +204,14 @@ void hset_find(struct hash_set *h, void *key, iterator_t *it)
 	it->ptr = NULL;
 }
 
-inline __set_key_size(struct hash_set *h, size_t key_size)
+inline __set_key_size(hash_set_t *h, size_t key_size)
 {
 	assert(h && key_size > 0 && key_size <= h->elem_size);
 	h->key_size = key_size;
 }
 
 /* inserts node */
-int __hset_insert_node(struct hash_set *h, struct chain_node *n)
+int __hset_insert_node(hash_set_t *h, struct chain_node *n)
 {
 	assert(h && n && h->buckets && n->data);
 
@@ -258,7 +260,7 @@ int __hset_insert_node(struct hash_set *h, struct chain_node *n)
 	return 0;
 }
 
-void __hset_expand(struct hash_set *h)
+void __hset_expand(hash_set_t *h)
 {
 	assert(h && h->buckets);
 
@@ -287,7 +289,7 @@ void __hset_expand(struct hash_set *h)
 	free(old_buckets);
 }
 
-void __hset_iter_head(iterator_t *it, struct hash_set *h)
+void __hset_iter_head(iterator_t *it, hash_set_t *h)
 {
 	assert(it && h);
 
@@ -315,7 +317,7 @@ void __hset_iter_head(iterator_t *it, struct hash_set *h)
 	}
 }
 
-void __hset_iter_next(iterator_t *it, struct hash_set *h)
+void __hset_iter_next(iterator_t *it, hash_set_t *h)
 {
 	assert(it && h && it->ptr);
 
@@ -344,7 +346,7 @@ void __hset_iter_next(iterator_t *it, struct hash_set *h)
 	}
 }
 
-void __free_bucket(struct hash_set *h, struct bucket *b)
+void __free_bucket(hash_set_t *h, struct bucket *b)
 {
 	assert(b);
 
@@ -358,7 +360,7 @@ void __free_bucket(struct hash_set *h, struct bucket *b)
 	b->first = NULL;
 }
 
-inline void __free_chain_node(struct hash_set *h, struct chain_node *n)
+inline void __free_chain_node(hash_set_t *h, struct chain_node *n)
 {
 	assert(h && n);
 	if (h->free != NULL) {
