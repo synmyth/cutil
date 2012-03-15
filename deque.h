@@ -6,6 +6,7 @@
 #include "util_define.h"
 
 #define DEFAULT_BLOCK_CAPACITY	512
+typedef struct deque deque_t;
 
 struct block {
 	void *array;
@@ -27,29 +28,29 @@ struct deque {
 	void (*free)(void *element);
 };
 
-void deque_init(struct deque *d, size_t elem_size,
+void deque_init(deque_t *d, size_t elem_size,
 		void (*copy_func)(void *, void *), void (*free_func)(void *));
-inline void deque_destroy(struct deque *d);
-inline int deque_empty(struct deque *d);
-inline size_t deque_size(struct deque *d);
-void* deque_at(struct deque *d, size_t position);
-inline void* deque_front(struct deque *d);
-inline void* deque_back(struct deque *d);
-void deque_clear(struct deque *d);
-void deque_push_back(struct deque *d, void *element);
-void deque_pop_back(struct deque *d);
-void deque_push_front(struct deque *d, void *element);
-void deque_pop_front(struct deque *d);
-void __expand(struct deque *d);
-void __block_destroy(struct deque *d, struct block *b);
+inline void deque_destroy(deque_t *d);
+inline int deque_empty(deque_t *d);
+inline size_t deque_size(deque_t *d);
+void* deque_at(deque_t *d, size_t position);
+inline void* deque_front(deque_t *d);
+inline void* deque_back(deque_t *d);
+void deque_clear(deque_t *d);
+void deque_push_back(deque_t *d, void *element);
+void deque_pop_back(deque_t *d);
+void deque_push_front(deque_t *d, void *element);
+void deque_pop_front(deque_t *d);
+void __expand(deque_t *d);
+void __block_destroy(deque_t *d, struct block *b);
 
 /* initialize deque */
-void deque_init(struct deque *d, size_t elem_size,
+void deque_init(deque_t *d, size_t elem_size,
 		void (*copy_func)(void *, void *), void (*free_func)(void *))
 {
 	assert(d && elem_size > 0);
 
-	memset(d, 0, sizeof(struct deque));
+	memset(d, 0, sizeof(deque_t));
 	d->capacity = DEFAULT_CONTAINER_CAPACITY;
 	d->array = malloc(sizeof(struct block) * d->capacity);
 	assert(d->array);
@@ -62,7 +63,7 @@ void deque_init(struct deque *d, size_t elem_size,
 }
 
 /* destroy deque, free memory */
-inline void deque_destroy(struct deque *d)
+inline void deque_destroy(deque_t *d)
 {
 	assert(d);
 	deque_clear(d);
@@ -72,21 +73,21 @@ inline void deque_destroy(struct deque *d)
 }
 
 /* check whether the container is empty */
-inline int deque_empty(struct deque *d)
+inline int deque_empty(deque_t *d)
 {
 	assert(d);
 	return !d->deque_size;
 }
 
 /* return the number of elements */
-inline size_t deque_size(struct deque *d)
+inline size_t deque_size(deque_t *d)
 {
 	assert(d);
 	return d->deque_size;
 }
 
 /* access specified element with bounds checking */
-void* deque_at(struct deque *d, size_t position)
+void* deque_at(deque_t *d, size_t position)
 {
 	assert(d && d->array && position < deque_size(d));
 
@@ -110,21 +111,21 @@ void* deque_at(struct deque *d, size_t position)
 }
 
 /* access the first element */
-inline void* deque_front(struct deque *d)
+inline void* deque_front(deque_t *d)
 {
 	assert(d);
 	return deque_at(d, 0);
 }
 
 /* access the last element */
-inline void* deque_back(struct deque *d)
+inline void* deque_back(deque_t *d)
 {
 	assert(d);
 	return deque_at(d, deque_size(d) - 1);
 }
 
 /* clears the contents */
-void deque_clear(struct deque *d)
+void deque_clear(deque_t *d)
 {
 	assert(d);
 
@@ -146,7 +147,7 @@ reset:
 }
 
 /* inserts elements to the end */
-void deque_push_back(struct deque *d, void *element)
+void deque_push_back(deque_t *d, void *element)
 {
 	assert(d && d->array && element);
 
@@ -190,7 +191,7 @@ void deque_push_back(struct deque *d, void *element)
 }
 
 /* removes the last element */
-void deque_pop_back(struct deque *d)
+void deque_pop_back(deque_t *d)
 {
 	assert(d && d->array && !deque_empty(d));
 
@@ -224,7 +225,7 @@ void deque_pop_back(struct deque *d)
 }
 
 /* inserts elements to the beginging */
-void deque_push_front(struct deque *d, void *element)
+void deque_push_front(deque_t *d, void *element)
 {
 	assert(d && d->array && element);
 
@@ -269,7 +270,7 @@ void deque_push_front(struct deque *d, void *element)
 }
 
 /* removes the first element */
-void deque_pop_front(struct deque *d)
+void deque_pop_front(deque_t *d)
 {
 	assert(d && d->array && !deque_empty(d));
 
@@ -303,7 +304,7 @@ void deque_pop_front(struct deque *d)
 }
 
 /* expand the block array */
-void __expand(struct deque *d)
+void __expand(deque_t *d)
 {
 	size_t old_capacity = d->capacity;
 	d->capacity *= 2;
@@ -327,7 +328,7 @@ void __expand(struct deque *d)
 }
 
 /* destroy the block, free the memory */
-void __block_destroy(struct deque *d, struct block *b)
+void __block_destroy(deque_t *d, struct block *b)
 {
 	assert(b);
 	if (b->array != NULL) {

@@ -3,7 +3,7 @@
 #include "deque.h"
 
 struct queue {
-	struct deque d;
+	deque_t d;
 };
 
 inline void queue_init(struct queue *q, size_t elem_size,

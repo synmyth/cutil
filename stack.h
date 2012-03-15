@@ -3,7 +3,7 @@
 #include "deque.h"
 
 struct stack {
-	struct deque d;
+	deque_t d;
 };
 
 inline void stack_init(struct stack *s, size_t elem_size,
