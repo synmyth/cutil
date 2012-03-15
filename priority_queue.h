@@ -10,33 +10,33 @@
 #define lchild(x)	(2 * x + 1)
 #define rchild(x)	(2 * x + 2)
 
-struct priority_queue {
+typedef struct {
 	vector_t v;
 	void *tmp_elem;
 	int (*compare)(void *e1, void *e2);
-};
+} priority_queue_t;
 
 /* function prototype */
-void pqueue_init(struct priority_queue *q, size_t elem_size,
+void pqueue_init(priority_queue_t *q, size_t elem_size,
 		void (*copy_func)(void *, void *),
 		void (*free_func)(void *),
 		int (*cmp_func)(void *, void *));
-void pqueue_destroy(struct priority_queue *q);
-inline int pqueue_empty(struct priority_queue *q);
-inline size_t pqueue_size(struct priority_queue *q);
-inline void* pqueue_top(struct priority_queue *q);
-void pqueue_push(struct priority_queue *q, void *element);
-void pqueue_pop(struct priority_queue *q);
+void pqueue_destroy(priority_queue_t *q);
+inline int pqueue_empty(priority_queue_t *q);
+inline size_t pqueue_size(priority_queue_t *q);
+inline void* pqueue_top(priority_queue_t *q);
+void pqueue_push(priority_queue_t *q, void *element);
+void pqueue_pop(priority_queue_t *q);
 
 /* initialize the priority queue */
-void pqueue_init(struct priority_queue *q, size_t elem_size,
+void pqueue_init(priority_queue_t *q, size_t elem_size,
 		void (*copy_func)(void *, void *),
 		void (*free_func)(void *),
 		int (*cmp_func)(void *, void *))
 {
 	assert(q && elem_size > 0 && cmp_func);
 
-	memset(q, 0, sizeof(struct priority_queue));
+	memset(q, 0, sizeof(priority_queue_t));
 	vector_init(&q->v, elem_size, copy_func, free_func);
 	q->compare = cmp_func;
 	q->tmp_elem = malloc(elem_size);
@@ -44,7 +44,7 @@ void pqueue_init(struct priority_queue *q, size_t elem_size,
 }
 
 /* destroy the priority queue */
-void pqueue_destroy(struct priority_queue *q)
+void pqueue_destroy(priority_queue_t *q)
 {
 	assert(q);
 	vector_destroy(&q->v);
@@ -53,28 +53,28 @@ void pqueue_destroy(struct priority_queue *q)
 }
 
 /* checks whether the underlying container is empty */
-inline int pqueue_empty(struct priority_queue *q)
+inline int pqueue_empty(priority_queue_t *q)
 {
 	assert(q);
 	return vector_empty(&q->v);
 }
 
 /* returns the number of elements */
-inline size_t pqueue_size(struct priority_queue *q)
+inline size_t pqueue_size(priority_queue_t *q)
 {
 	assert(q);
 	return vector_size(&q->v);
 }
 
 /* access the top element */
-inline void* pqueue_top(struct priority_queue *q)
+inline void* pqueue_top(priority_queue_t *q)
 {
 	assert(q && !pqueue_empty(q));
 	return vector_at(&q->v, 0);
 }
 
 /* exchange 2 elements of the vector */
-inline void __exchange(struct priority_queue *q, size_t p1, size_t p2)
+inline void __exchange(priority_queue_t *q, size_t p1, size_t p2)
 {
 	assert(q && q->tmp_elem);
 	vector_t *v = &q->v;
@@ -89,7 +89,7 @@ inline void __exchange(struct priority_queue *q, size_t p1, size_t p2)
 }
 
 /* inserts element and sorts the underlying container */
-void pqueue_push(struct priority_queue *q, void *element)
+void pqueue_push(priority_queue_t *q, void *element)
 {
 	assert(q && element);
 
@@ -107,7 +107,7 @@ void pqueue_push(struct priority_queue *q, void *element)
 }
 
 /* removes the first element */
-void pqueue_pop(struct priority_queue *q)
+void pqueue_pop(priority_queue_t *q)
 {
 	assert(q && !pqueue_empty(q));
 
