@@ -27,7 +27,7 @@ do { \
 } while (0)
 
 /* hash function for little endian 32bit machine */
-uint32 hashlittle32(const void *key, size_t length, uint32 initval)
+static inline uint32 hashlittle32(const void *key, size_t length, uint32 initval)
 {
 	uint32 a,b,c;                                          /* internal state */
 
@@ -80,7 +80,7 @@ uint32 hashlittle32(const void *key, size_t length, uint32 initval)
 	return c;
 }
 
-inline uint32 hash(const void *key, size_t length)
+static inline uint32 hash(const void *key, size_t length)
 {
 	return hashlittle32(key, length, 0);
 }
