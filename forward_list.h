@@ -33,6 +33,30 @@ void flist_free(void *element);
 void __flist_iter_head(iterator_t *it, forward_list_t *l);
 void __flist_iter_next(iterator_t *it, forward_list_t *l);
 
+static inline struct flist_node* __alloc_flist_node(forward_list_t *l, void *element)
+{
+	/* malloc new node */
+	struct flist_node *tmp = malloc(sizeof(struct flist_node));
+	assert(tmp);
+	tmp->data = malloc(l->elem_size);
+	assert(tmp->data);
+
+	/* copy element to new node */
+	CONTAINER_COPY(tmp->data, element, l);
+
+	return tmp;
+}
+
+static inline void __free_flist_node(forward_list_t *l, struct flist_node *n)
+{
+	if (l->free != NULL) {
+		l->free(n->data);
+	}
+
+	free(n->data);
+	free(n);
+}
+
 /* checks whether the container is empty */
 static inline int flist_empty(forward_list_t *l)
 {
@@ -62,7 +86,7 @@ static inline void flist_push_front(forward_list_t *l, void *element)
 	assert(l && element);
 
 	/* malloc new node */
-	struct flist_node *tmp = __alloc_new_flist_node(l, element);
+	struct flist_node *tmp = __alloc_flist_node(l, element);
 	assert(tmp);
 
 	/* inserts the new node to list */
@@ -87,30 +111,6 @@ static inline void flist_pop_front(forward_list_t *l)
 	head->next = node_after_first;
 	__free_flist_node(l, first);
 	l->size--;
-}
-
-static inline struct flist_node* __alloc_new_flist_node(forward_list_t *l, void *element)
-{
-	/* malloc new node */
-	struct flist_node *tmp = malloc(sizeof(struct flist_node));
-	assert(tmp);
-	tmp->data = malloc(l->elem_size);
-	assert(tmp->data);
-
-	/* copy element to new node */
-	CONTAINER_COPY(tmp->data, element, l);
-
-	return tmp;
-}
-
-static inline void __free_flist_node(forward_list_t *l, struct flist_node *n)
-{
-	if (l->free != NULL) {
-		l->free(n->data);
-	}
-
-	free(n->data);
-	free(n);
 }
 
 #endif
