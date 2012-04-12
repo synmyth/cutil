@@ -1,5 +1,9 @@
 #include "forward_list.h"
 
+/* function portotypes */
+static void __flist_iter_head(iterator_t *it, forward_list_t *l);
+static void __flist_iter_next(iterator_t *it, forward_list_t *l);
+
 /* initialize the list */
 void flist_init(forward_list_t *l, size_t elem_size,
 		void (*copy_func)(void *, void *), void (*free_func)(void *))
@@ -82,7 +86,7 @@ void flist_free(void *element)
 	flist_destroy(l);
 }
 
-void __flist_iter_head(iterator_t *it, forward_list_t *l)
+static void __flist_iter_head(iterator_t *it, forward_list_t *l)
 {
 	assert(it && l);
 
@@ -93,7 +97,7 @@ void __flist_iter_head(iterator_t *it, forward_list_t *l)
 	it->size = flist_size(l);
 }
 
-void __flist_iter_next(iterator_t *it, forward_list_t *l)
+static void __flist_iter_next(iterator_t *it, forward_list_t *l)
 {
 	assert(it && l);
 

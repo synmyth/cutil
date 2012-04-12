@@ -1,5 +1,11 @@
 #include "vector.h"
 
+/* function prototypes */
+static void __vector_iter_head(iterator_t *it, vector_t *v);
+static void __vector_iter_next(iterator_t *it, vector_t *v);
+static void __vector_iter_tail(iterator_t *it, vector_t *v);
+static void __vector_iter_prev(iterator_t *it, vector_t *v);
+
 /* initialize the vector */
 void vector_init(vector_t *v, size_t elem_size,
 		void (*copy_func)(void *, void *), void (*free_func)(void *))
@@ -80,7 +86,7 @@ void vector_delete(vector_t *v, size_t position)
 }
 
 /* iterator head function for vector */
-void __vector_iter_head(iterator_t *it, vector_t *v)
+static void __vector_iter_head(iterator_t *it, vector_t *v)
 {
 	assert(it && v);
 
@@ -91,7 +97,7 @@ void __vector_iter_head(iterator_t *it, vector_t *v)
 }
 
 /* iterator next function for vector */
-void __vector_iter_next(iterator_t *it, vector_t *v)
+static void __vector_iter_next(iterator_t *it, vector_t *v)
 {
 	assert(it && v);
 
@@ -100,7 +106,7 @@ void __vector_iter_next(iterator_t *it, vector_t *v)
 }
 
 /* iterator tail function for vector */
-void __vector_iter_tail(iterator_t *it, vector_t *v)
+static void __vector_iter_tail(iterator_t *it, vector_t *v)
 {
 	assert(it && v);
 
@@ -111,7 +117,7 @@ void __vector_iter_tail(iterator_t *it, vector_t *v)
 }
 
 /* iterator previous function for vector */
-void __vector_iter_prev(iterator_t *it, vector_t *v)
+static void __vector_iter_prev(iterator_t *it, vector_t *v)
 {
 	assert(it && v);
 

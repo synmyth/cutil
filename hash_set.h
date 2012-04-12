@@ -48,8 +48,6 @@ void hset_clear(hash_set_t *h);
 void hset_insert(hash_set_t *h, void *key);
 void hset_erase(hash_set_t *h, void *key);
 void hset_find(hash_set_t *h, void *key, iterator_t *it);
-void __hset_iter_head(iterator_t *it, hash_set_t *h);
-void __hset_iter_next(iterator_t *it, hash_set_t *h);
 
 /* destroy the hash set */
 static inline void hset_destroy(hash_set_t *h)

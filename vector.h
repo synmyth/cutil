@@ -28,10 +28,6 @@ void vector_insert(vector_t *v, void *element, size_t position);
 void vector_replace(vector_t *v, void *element, size_t position);
 void vector_clear(vector_t *v);
 void vector_delete(vector_t *v, size_t position);
-void __vector_iter_head(iterator_t *it, vector_t *v);
-void __vector_iter_next(iterator_t *it, vector_t *v);
-void __vector_iter_tail(iterator_t *it, vector_t *v);
-void __vector_iter_prev(iterator_t *it, vector_t *v);
 
 /* destroy vector, free memory */
 static inline void vector_destroy(vector_t *v)

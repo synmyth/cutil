@@ -30,8 +30,6 @@ void flist_clear(forward_list_t *l);
 void flist_reverse(forward_list_t *l);
 void flist_copy(void *dest, void *src);
 void flist_free(void *element);
-void __flist_iter_head(iterator_t *it, forward_list_t *l);
-void __flist_iter_next(iterator_t *it, forward_list_t *l);
 
 static inline struct flist_node* __alloc_flist_node(forward_list_t *l, void *element)
 {

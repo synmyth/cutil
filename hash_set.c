@@ -4,6 +4,8 @@
 static int __hset_insert_node(hash_set_t *h, struct chain_node *n);
 static void __hset_expand(hash_set_t *h);
 static void __free_bucket(hash_set_t *h, struct bucket *b);
+static void __hset_iter_head(iterator_t *it, hash_set_t *h);
+static void __hset_iter_next(iterator_t *it, hash_set_t *h);
 
 /* initialize the hash set */
 void hset_init(hash_set_t *h, size_t elem_size,
@@ -206,7 +208,7 @@ static void __hset_expand(hash_set_t *h)
 	free(old_buckets);
 }
 
-void __hset_iter_head(iterator_t *it, hash_set_t *h)
+static void __hset_iter_head(iterator_t *it, hash_set_t *h)
 {
 	assert(it && h);
 
@@ -234,7 +236,7 @@ void __hset_iter_head(iterator_t *it, hash_set_t *h)
 	}
 }
 
-void __hset_iter_next(iterator_t *it, hash_set_t *h)
+static void __hset_iter_next(iterator_t *it, hash_set_t *h)
 {
 	assert(it && h && it->ptr);
 
