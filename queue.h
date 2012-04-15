@@ -2,6 +2,8 @@
 #define _QUEUE_H_
 #include "deque.h"
 
+#define QUEUE_INIT(q, elem_size)	queue_init((q), (elem_size), NULL, NULL)
+
 typedef struct {
 	deque_t d;
 } queue_t;

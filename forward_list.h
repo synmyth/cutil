@@ -6,6 +6,8 @@
 #include "util_define.h"
 #include "iterator.h"
 
+#define FLIST_INIT(l, elem_size)	flist_init((l), (elem_size), NULL, NULL)
+
 typedef struct forward_list forward_list_t;
 
 struct flist_node {

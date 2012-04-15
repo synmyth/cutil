@@ -7,6 +7,8 @@
 #include "iterator.h"
 
 #define DEFAULT_BLOCK_CAPACITY	512
+#define DEQUE_INIT(d, elem_size)	deque_init((d), (elem_size), NULL, NULL)
+
 typedef struct deque deque_t;
 
 struct block {

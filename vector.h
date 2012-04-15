@@ -6,6 +6,8 @@
 #include "util_define.h"
 #include "iterator.h"
 
+#define VECTOR_INIT(v, elem_size)	vector_init((v), (elem_size), NULL, NULL)
+
 typedef struct vector vector_t;
 
 struct vector {

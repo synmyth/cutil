@@ -6,6 +6,8 @@
 #include "util_define.h"
 #include "iterator.h"
 
+#define LIST_INIT(l, elem_size)	list_init((l), (elem_size), NULL, NULL)
+
 typedef struct list list_t;
 
 struct list_node {

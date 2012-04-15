@@ -10,6 +10,7 @@
 #define MAX_BUCKET_CAPACITY	11
 #define EQUALS(e1, e2, h)	(h->compare) ?	\
 	(!h->compare(e1, e2)) : (!memcmp(e1, e2, h->key_size))
+#define HSET_INIT(h, elem_size)	hset_init((h), (elem_size), NULL, NULL, NULL)
 
 typedef struct hash_set hash_set_t;
 

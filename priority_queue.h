@@ -9,6 +9,7 @@
 #define parent(x)	((x - 1) / 2)
 #define lchild(x)	(2 * x + 1)
 #define rchild(x)	(2 * x + 2)
+#define PQUEUE_INIT(q, elem_size)	pqueue_init((q), (elem_size), NULL, NULL)
 
 typedef struct {
 	vector_t v;

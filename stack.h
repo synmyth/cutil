@@ -2,6 +2,8 @@
 #define _STACK_H_
 #include "deque.h"
 
+#define STACK_INIT(s, elem_size)	stack_init((s), (elem_size), NULL, NULL)
+
 typedef struct {
 	deque_t d;
 } stack_t;
