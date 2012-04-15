@@ -3,6 +3,11 @@
 /* function prototypes */
 static void __expand(deque_t *d);
 static void __block_destroy(deque_t *d, struct block *b);
+static void __deque_iter_head(iterator_t *it, deque_t *d);
+static void __deque_iter_next(iterator_t *it, deque_t *d);
+static void __deque_iter_tail(iterator_t *it, deque_t *d);
+static void __deque_iter_prev(iterator_t *it, deque_t *d);
+
 
 /* initialize deque */
 void deque_init(deque_t *d, size_t elem_size,
@@ -20,6 +25,10 @@ void deque_init(deque_t *d, size_t elem_size,
 	d->elem_size = elem_size;
 	d->copy = copy_func;
 	d->free = free_func;
+	d->iter_head = __deque_iter_head;
+	d->iter_next = __deque_iter_next;
+	d->iter_tail = __deque_iter_tail;
+	d->iter_prev = __deque_iter_prev;
 }
 
 /* access specified element with bounds checking */
@@ -265,4 +274,45 @@ static void __block_destroy(deque_t *d, struct block *b)
 	}
 
 	memset(b, 0, sizeof(struct block));
+}
+
+/* iterator head function for deque */
+static void __deque_iter_head(iterator_t *it, deque_t *d)
+{
+	assert(it && d);
+
+	it->ptr = (!deque_empty(d)) ? deque_front(d) : NULL;
+	it->data = it->ptr;
+	it->i = 0;
+	it->size = deque_size(d);
+}
+
+/* iterator next function for deque */
+static void __deque_iter_next(iterator_t *it, deque_t *d)
+{
+	assert(it && d);
+
+	it->ptr = (++(it->i) < it->size) ? deque_at(d, it->i) : NULL;
+	it->data = it->ptr;
+}
+
+/* iterator tail function for deque */
+static void __deque_iter_tail(iterator_t *it, deque_t *d)
+{
+	assert(it && d);
+
+	it->ptr = (!deque_empty(d)) ? deque_back(d) : NULL;
+	it->data = it->ptr;
+	it->i = 0;
+	it->size = deque_size(d);
+}
+
+/* iterator previous function for deque */
+static void __deque_iter_prev(iterator_t *it, deque_t *d)
+{
+	assert(it && d);
+
+	it->ptr = (++(it->i) < it->size) ?
+		deque_at(d, it->size - it->i - 1) : NULL;
+	it->data = it->ptr;
 }

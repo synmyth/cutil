@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "util_define.h"
+#include "iterator.h"
 
 #define DEFAULT_BLOCK_CAPACITY	512
 typedef struct deque deque_t;
@@ -26,6 +27,10 @@ struct deque {
 	size_t elem_size;
 	void (*copy)(void *dest, void *src);
 	void (*free)(void *element);
+	void (*iter_head)(iterator_t *it, deque_t *d);
+	void (*iter_next)(iterator_t *it, deque_t *d);
+	void (*iter_tail)(iterator_t *it, deque_t *d);
+	void (*iter_prev)(iterator_t *it, deque_t *d);
 };
 
 void deque_init(deque_t *d, size_t elem_size,
