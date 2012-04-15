@@ -112,7 +112,7 @@ static void __vector_iter_tail(iterator_t *it, vector_t *v)
 
 	it->ptr = (!vector_empty(v)) ? vector_back(v) : NULL;
 	it->data = it->ptr;
-	it->i = vector_size(v) - 1;
+	it->i = 0;
 	it->size = vector_size(v);
 }
 
@@ -121,6 +121,7 @@ static void __vector_iter_prev(iterator_t *it, vector_t *v)
 {
 	assert(it && v);
 
-	it->ptr = ((it->i)-- > 0) ? vector_at(v, it->i) : NULL;
+	it->ptr = (++(it->i) < it->size) ?
+		vector_at(v, it->size - it->i - 1) : NULL;
 	it->data = it->ptr;
 }
