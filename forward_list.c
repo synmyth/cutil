@@ -40,7 +40,6 @@ void flist_clear(forward_list_t *l)
 	}
 
 	head->next = NULL;
-	head->data = NULL;
 	l->size = 0;
 }
 

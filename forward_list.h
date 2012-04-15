@@ -12,7 +12,7 @@ typedef struct forward_list forward_list_t;
 
 struct flist_node {
 	struct flist_node *next;
-	void *data;
+	char data[0];
 };
 
 struct forward_list {
@@ -36,10 +36,8 @@ void flist_free(void *element);
 static inline struct flist_node* __alloc_flist_node(forward_list_t *l, void *element)
 {
 	/* malloc new node */
-	struct flist_node *tmp = malloc(sizeof(struct flist_node));
+	struct flist_node *tmp = malloc(sizeof(struct flist_node) + l->elem_size);
 	assert(tmp);
-	tmp->data = malloc(l->elem_size);
-	assert(tmp->data);
 
 	/* copy element to new node */
 	CONTAINER_COPY(tmp->data, element, l);
@@ -53,7 +51,6 @@ static inline void __free_flist_node(forward_list_t *l, struct flist_node *n)
 		l->free(n->data);
 	}
 
-	free(n->data);
 	free(n);
 }
 
