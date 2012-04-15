@@ -51,6 +51,7 @@ void hset_insert(hash_set_t *h, void *key)
 	struct chain_node *tmp = malloc(sizeof(struct chain_node));
 	assert(tmp);
 	tmp->data = malloc(h->elem_size);
+	tmp->next = NULL;
 	assert(tmp->data);
 	CONTAINER_COPY(tmp->data, key, h);
 	int ret = __hset_insert_node(h, tmp);
