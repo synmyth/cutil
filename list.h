@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "util_define.h"
+#include "iterator.h"
 
 typedef struct list list_t;
 
@@ -19,6 +20,10 @@ struct list {
 	size_t elem_size;
 	void (*copy)(void *dest, void *src);
 	void (*free)(void *element);
+	void (*iter_head)(iterator_t *it, list_t *l);
+	void (*iter_next)(iterator_t *it, list_t *l);
+	void (*iter_tail)(iterator_t *it, list_t *l);
+	void (*iter_prev)(iterator_t *it, list_t *l);
 };
 
 void list_init(list_t *l, size_t elem_size,
