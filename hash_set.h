@@ -16,7 +16,7 @@ typedef struct hash_set hash_set_t;
 
 struct chain_node {
 	struct chain_node *next;
-	void *data;
+	char data[0];
 };
 
 struct bucket {
@@ -86,7 +86,6 @@ static inline void __free_chain_node(hash_set_t *h, struct chain_node *n)
 		h->free(n->data);
 	}
 
-	free(n->data);
 	free(n);
 }
 
