@@ -47,7 +47,6 @@ void list_clear(list_t *l)
 	}
 
 	head->prev = head->next = head;
-	head->data = NULL;
 	l->size = 0;
 }
 

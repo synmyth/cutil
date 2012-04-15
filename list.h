@@ -13,7 +13,7 @@ typedef struct list list_t;
 struct list_node {
 	struct list_node *prev;
 	struct list_node *next;
-	void *data;
+	char data[0];
 };
 
 struct list {
@@ -37,10 +37,8 @@ void list_reverse(list_t *l);
 static inline struct list_node* __alloc_list_node(list_t *l, void *element)
 {
 	/* malloc new node */
-	struct list_node *tmp = malloc(sizeof(struct list_node));
+	struct list_node *tmp = malloc(sizeof(struct list_node) + l->elem_size);
 	assert(tmp);
-	tmp->data = malloc(l->elem_size);
-	assert(tmp->data);
 
 	/* copy element to new node */
 	CONTAINER_COPY(tmp->data, element, l);
@@ -54,7 +52,6 @@ static inline void __free_list_node(list_t *l, struct list_node *n)
 		l->free(n->data);
 	}
 
-	free(n->data);
 	free(n);
 }
 
